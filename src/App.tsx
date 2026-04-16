@@ -1,115 +1,159 @@
-import { useState, useEffect } from 'react';
+// App.tsx
+import React, { useState } from 'react';
+import './App.scss';
 
-// Твой URL для авторизации
-const LOGIN_URL = 'https://project-domain.ru/api/Auth/login'; 
-
-function App() {
-  const [data, setData] = useState<string>('Ожидание действий...');
-  const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  // Отслеживаем статус интернета (важно для PWA)
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
-
-  // Функция авторизации
-  const handleLogin = async () => {
-    if (!isOnline) {
-      setData('❌ Ошибка: нет интернета. Невозможно выполнить вход в офлайн-режиме.');
-      return;
-    }
-
-    setIsLoading(true);
-    setData('Отправка запроса...');
-
-    try {
-      const response = await fetch(LOGIN_URL, {
-        method: 'POST',
-        headers: {
-          // Обязательно указываем, что отправляем JSON
-          'Content-Type': 'application/json', 
-          // 'Accept': 'application/json' // Раскомментируй, если бэкенд требует этот заголовок
-        },
-        body: JSON.stringify({
-          email: "admin@admin.ru",
-          password: "admin"
-        })
-      });
-      
-      // Если бэкенд вернул не 200 OK (например, 401 Неверный пароль)
-      if (!response.ok) {
-        throw new Error(`Ошибка HTTP: ${response.status} ${response.statusText}`);
-      }
-      
-      const result = await response.json();
-      
-      // Выводим успешный ответ на экран
-      setData(`✅ Успешный ответ от сервера:\n\n${JSON.stringify(result, null, 2)}`);
-      
-      // Здесь на хакатоне обычно сохраняют токен
-      // localStorage.setItem('token', result.token);
-
-    } catch (error) {
-      setData(`❌ Ошибка запроса (CORS или сеть):\n${(error as Error).message}`);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  return (
-    <div style={{ padding: '20px', fontFamily: 'sans-serif', maxWidth: '500px', margin: '0 auto' }}>
-      <h2>Тест авторизации (PWA)</h2>
-      
-      <div style={{ 
-        marginBottom: '20px', 
-        padding: '10px', 
-        backgroundColor: isOnline ? '#d4edda' : '#f8d7da',
-        borderRadius: '5px'
-      }}>
-        Статус устройства: <strong>{isOnline ? '🟢 ОНЛАЙН' : '🔴 ОФФЛАЙН'}</strong>
-      </div>
-
-      <button 
-        onClick={handleLogin} 
-        disabled={isLoading}
-        style={{ 
-          padding: '12px 24px', 
-          fontSize: '16px', 
-          marginBottom: '20px',
-          backgroundColor: isLoading ? '#ccc' : '#007bff',
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: isLoading ? 'not-allowed' : 'pointer',
-          width: '100%'
-        }}
-      >
-        {isLoading ? 'Загрузка...' : 'Отправить POST на /api/Auth/login'}
-      </button>
-
-      <h4>Ответ от сервера:</h4>
-      <pre style={{ 
-        backgroundColor: '#282c34', 
-        color: '#abb2bf',
-        padding: '15px', 
-        borderRadius: '5px',
-        overflowX: 'auto',
-        fontSize: '14px'
-      }}>
-        {data}
-      </pre>
-    </div>
-  );
+// --- Типы данных ---
+interface Equipment {
+  id: string;
+  name: string;
+  location: string;
+  status: 'pending' | 'done';
 }
 
-export default App;
+// --- Моковые данные (Маршрут) ---
+const MOCK_ROUTE: Equipment[] = [
+  { id: '1', name: 'Насос питательный ПЭ-1', location: 'Турбинный цех', status: 'pending' },
+  { id: '2', name: 'Маслоохладитель МО-2', location: 'Турбинный цех', status: 'pending' },
+  { id: '3', name: 'Задвижка паропровода ВД', location: 'Котельный цех', status: 'done' },
+];
+
+// ==========================================
+// ОСНОВНОЙ КОМПОНЕНТ ПРИЛОЖЕНИЯ
+// ==========================================
+export default function App() {
+  // Состояния роутинга
+  const [currentPage, setCurrentPage] = useState<'login' | 'list' | 'form'>('login');
+  
+  // Состояние выбранного оборудования для формы
+  const [selectedEq, setSelectedEq] = useState<Equipment | null>(null);
+
+  // Обработчики переходов
+  const handleLoginSuccess = () => setCurrentPage('list');
+  
+  const handleOpenForm = (eq: Equipment) => {
+    setSelectedEq(eq);
+    setCurrentPage('form');
+  };
+
+  const handleBackToList = () => {
+    setSelectedEq(null);
+    setCurrentPage('list');
+  };
+
+  const handleSubmitForm = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Имитация отправки данных (на хакатоне здесь будет fetch)
+    alert(`Данные по ${selectedEq?.name} сохранены локально!`);
+    handleBackToList();
+  };
+
+  // --- Страница 1: АВТОРИЗАЦИЯ ---
+  if (currentPage === 'login') {
+    return (
+      <div className="app-container">
+        <div className="content login-screen">
+          <h2>Вход в систему</h2>
+          <form onSubmit={(e) => { e.preventDefault(); handleLoginSuccess(); }}>
+            <div className="form-group">
+              <label>Логин / Email</label>
+              <input type="text" placeholder="admin@zavod.ru" required />
+            </div>
+            <div className="form-group">
+              <label>Пароль</label>
+              <input type="password" placeholder="••••••••" required />
+            </div>
+            <button type="submit" className="btn btn-primary" style={{ marginTop: '20px' }}>
+              Войти
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // --- Страница 2: СПИСОК ОБОРУДОВАНИЯ (Карта/Маршрут) ---
+  if (currentPage === 'list') {
+    return (
+      <div className="app-container">
+        <header className="header">
+          <h1>Маршрут обхода</h1>
+          <button className="back-btn" onClick={() => setCurrentPage('login')}>Выход</button>
+        </header>
+        
+        <div className="content">
+          <p style={{ marginBottom: '16px', color: 'var(--gray-text)' }}>
+            Осталось проверить: {MOCK_ROUTE.filter(e => e.status === 'pending').length}
+          </p>
+
+          <div className="equipment-list">
+            {MOCK_ROUTE.map((eq) => (
+              <div 
+                key={eq.id} 
+                className="equipment-card"
+                onClick={() => handleOpenForm(eq)}
+              >
+                <div className="eq-info">
+                  <h3>{eq.name}</h3>
+                  <p>{eq.location}</p>
+                </div>
+                {/* Индикатор статуса */}
+                <div className={`status ${eq.status}`} title={eq.status === 'done' ? 'Проверено' : 'Ожидает'} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // --- Страница 3: ФОРМА ЗАПОЛНЕНИЯ ---
+  if (currentPage === 'form' && selectedEq) {
+    return (
+      <div className="app-container">
+        <header className="header">
+          <button className="back-btn" onClick={handleBackToList}>◄ Назад</button>
+          <h1>Чек-лист</h1>
+          <div style={{ width: '50px' }}></div> {/* Пустой блок для выравнивания заголовка по центру */}
+        </header>
+
+        <form className="content" onSubmit={handleSubmitForm}>
+          <div style={{ marginBottom: '24px' }}>
+            <h2 style={{ fontSize: '18px', marginBottom: '4px' }}>{selectedEq.name}</h2>
+            <p style={{ color: 'var(--gray-text)', fontSize: '14px' }}>{selectedEq.location}</p>
+          </div>
+
+          <div className="form-group">
+            <label>Температура подшипника (°C)</label>
+            <input type="number" step="0.1" placeholder="Например: 45.5" required />
+          </div>
+
+          <div className="form-group">
+            <label>Давление масла (МПа)</label>
+            <input type="number" step="0.01" placeholder="Например: 0.15" required />
+          </div>
+
+          <div className="checkbox-group">
+            <input type="checkbox" id="defect" />
+            <label htmlFor="defect" style={{ color: 'var(--danger)' }}>Обнаружен визуальный дефект</label>
+          </div>
+
+          <div className="form-group">
+            <label>Комментарий / Описание дефекта</label>
+            <textarea placeholder="Опишите состояние или обнаруженные проблемы..."></textarea>
+          </div>
+
+          {/* Имитация кнопки фотофиксации (в PWA сюда вешается input type="file" capture="environment") */}
+          <button type="button" className="btn btn-secondary" style={{ marginBottom: '20px' }}>
+            📷 Сделать фото
+          </button>
+
+          <button type="submit" className="btn btn-primary">
+            Сохранить данные
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  return null;
+}

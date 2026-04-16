@@ -3,15 +3,13 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
-  // ВАЖНО: Если репозиторий называется "my-hack-project", пиши '/my-hack-project/'
-  // Если деплоишь в корень (username.github.io), то оставь '/'
   base: '/mobile-inspector-of-maintenance/', 
   plugins: [
     react(),
     VitePWA({
       registerType: 'autoUpdate',
       devOptions: {
-        enabled: true, // Позволяет тестировать PWA локально
+        enabled: true,
       },
       manifest: {
         name: 'Мобильный Обходчик',
