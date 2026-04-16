@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/mobile-inspector-of-maintenance/dev-sw.js?dev-sw', { scope: '/mobile-inspector-of-maintenance/', type: 'classic' })
