@@ -1,0 +1,48 @@
+/* src/pages/RouteList/RouteList.scss */
+.route-stats {
+  margin-bottom: 16px;
+  color: var(--gray-text);
+}
+
+.equipment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.equipment-card {
+  padding: 16px;
+  border: 1px solid var(--gray-light);
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  transition: border-color 0.2s;
+
+  &:active {
+    border-color: var(--main-brown);
+    background-color: var(--main-white);
+  }
+
+  .eq-info {
+    h3 {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+    p {
+      font-size: 13px;
+      color: var(--gray-text);
+    }
+  }
+
+  .status {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    
+    &.pending { background-color: var(--danger); }
+    &.done { background-color: var(--success); }
+  }
+}

@@ -1,0 +1,38 @@
+/* src/pages/EquipmentForm/EquipmentForm.scss */
+.eq-header {
+  margin-bottom: 24px;
+  
+  h2 {
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+  
+  p {
+    color: var(--gray-text);
+    font-size: 14px;
+  }
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 10px 0;
+
+  input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    accent-color: var(--main-brown);
+  }
+
+  .defect-label {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--danger);
+  }
+}
+
+.photo-btn {
+  margin-bottom: 20px;
+}   
