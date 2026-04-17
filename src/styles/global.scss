@@ -1,4 +1,3 @@
-/* App.scss */
 :root {
   --main-brown: #AE7D5F;
   --main-white: #F5F5F5;
@@ -22,9 +21,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Оболочка мобильного приложения */
+/* Общий контейнер приложения */
 .app-container {
-  max-width: 480px; /* Эмуляция мобилки на ПК */
+  max-width: 480px;
   margin: 0 auto;
   min-height: 100vh;
   background-color: #ffffff;
@@ -33,7 +32,7 @@ body {
   flex-direction: column;
 }
 
-/* Шапка (Header) */
+/* Общая шапка (Header) */
 .header {
   background-color: var(--main-black);
   color: var(--main-white);
@@ -60,7 +59,7 @@ body {
   }
 }
 
-/* Контентная часть */
+/* Контентная область */
 .content {
   padding: 20px;
   flex: 1;
@@ -68,7 +67,7 @@ body {
   flex-direction: column;
 }
 
-/* --- Формы и Инпуты --- */
+/* Базовые инпуты */
 .form-group {
   margin-bottom: 20px;
 
@@ -93,9 +92,7 @@ body {
     outline: none;
     transition: border-color 0.2s;
 
-    &:focus {
-      border-color: var(--main-brown);
-    }
+    &:focus { border-color: var(--main-brown); }
   }
 
   textarea {
@@ -104,26 +101,7 @@ body {
   }
 }
 
-.checkbox-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-  padding: 10px 0;
-
-  input[type="checkbox"] {
-    width: 24px;
-    height: 24px;
-    accent-color: var(--main-brown);
-  }
-
-  label {
-    font-size: 16px;
-    font-weight: 500;
-  }
-}
-
-/* --- Кнопки --- */
+/* Базовые кнопки */
 .btn {
   width: 100%;
   padding: 16px;
@@ -135,14 +113,12 @@ body {
   transition: opacity 0.2s;
   text-align: center;
 
-  &:active {
-    opacity: 0.8;
-  }
+  &:active { opacity: 0.8; }
 
   &.btn-primary {
     background-color: var(--main-brown);
     color: var(--main-white);
-    margin-top: auto; /* Прижимает кнопку вниз */
+    margin-top: auto;
   }
 
   &.btn-secondary {
@@ -150,58 +126,4 @@ body {
     color: var(--main-black);
     border: 1px solid var(--gray-light);
   }
-}
-
-/* --- Список оборудования (Карточки) --- */
-.equipment-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.equipment-card {
-  padding: 16px;
-  border: 1px solid var(--gray-light);
-  border-radius: 8px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #fff;
-  transition: border-color 0.2s;
-
-  &:active {
-    border-color: var(--main-brown);
-    background-color: var(--main-white);
-  }
-
-  .eq-info {
-    h3 {
-      font-size: 16px;
-      margin-bottom: 4px;
-    }
-    p {
-      font-size: 13px;
-      color: var(--gray-text);
-    }
-  }
-
-  .status {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    
-    &.pending { background-color: var(--danger); }
-    &.done { background-color: var(--success); }
-  }
-}
-
-/* Центрирование для экрана логина */
-.login-screen {
-  justify-content: center;
-  h2 {
-    font-size: 24px;
-    margin-bottom: 30px;
-    text-align: center;
-  }
-}
+}   

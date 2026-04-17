@@ -10,6 +10,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       devOptions: {
         enabled: true,
+        type: 'module'
       },
       manifest: {
         name: 'Мобильный Обходчик',
