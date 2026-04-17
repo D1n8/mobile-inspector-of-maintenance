@@ -7,7 +7,10 @@ export const MasterLayout: React.FC = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
     localStorage.removeItem('userRole');
+    localStorage.removeItem('userName');
     navigate('/');
   };
 
